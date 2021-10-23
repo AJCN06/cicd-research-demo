@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: registry.digitalocean.com/ajcn/site
+          image: registry.digitalocean.com/ajcn/site:${TAG}
           ports:
             - containerPort: 8080
 
