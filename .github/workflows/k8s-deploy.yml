@@ -9,14 +9,32 @@ on:
       - '.github/workflows/**'
 
 jobs:
-
-  build:
-    name: K8s Deploy  
+  push_docker:
+    name: Push docker image  
     runs-on: ubuntu-latest
     steps:
 
     - name: Checkout main
       uses: actions/checkout@v2
+
+    - name: Build & Push to Docker Hub
+      uses: opspresso/action-docker@master
+      with:
+        args: --docker
+      env:
+        USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        TAG_NAME: "latest"
+        BUILDX: "true"
+
+  k8s_deploy:
+    name: K8s Deploy  
+    needs: push_docker
+    runs-on: ubuntu-latest
+    steps:
+
+    # - name: Checkout main
+    #   uses: actions/checkout@v2
 
     - name: Update SHA
       run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/site/_meta
@@ -29,14 +47,14 @@ jobs:
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-    - name: Log in to DigitalOcean Container Registry with short-lived credentials
-      run: doctl registry login --expiry-seconds 600
+    # - name: Log in to DigitalOcean Container Registry with short-lived credentials
+    #   run: doctl registry login --expiry-seconds 600
 
-    - name: Push image to DigitalOcean Container Registry
-      run: docker push registry.digitalocean.com/ajcn/site:$(echo $GITHUB_SHA | head -c7)
+    # - name: Push image to DigitalOcean Container Registry
+    #   run: docker push registry.digitalocean.com/ajcn/site:$(echo $GITHUB_SHA | head -c7)
 
-    - name: Update deployment file
-      run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|registry.digitalocean.com/ajcn/site:'${TAG}'|' $GITHUB_WORKSPACE/config/deployment.yml
+    # - name: Update deployment file
+    #   run: $GITHUB_WORKSPACE/config/deployment.yml
 
     - name: Save DigitalOcean kubeconfig with short-lived credentials
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 nearlinx-research
