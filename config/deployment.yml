@@ -15,6 +15,7 @@ spec:
       containers:
         - name: site
           image: ajcn06/personal-nginx-01
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
 
