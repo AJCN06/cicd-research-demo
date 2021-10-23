@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: ajcn
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: ajcn
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: <IMAGE>
+          image: registry.digitalocean.com/ajcn/site
           ports:
             - containerPort: 8080
 
