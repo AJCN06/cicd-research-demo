@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: site
-          image: <IMAGE>
+          image: ajcn06/personal-nginx-01
           ports:
             - containerPort: 8080
 
