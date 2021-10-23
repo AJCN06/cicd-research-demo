@@ -18,14 +18,12 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build & Push to Docker Hub
-      uses: opspresso/action-docker@master
+      uses: zenato/docker-action@master
       with:
-        args: --docker
-      env:
-        USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        TAG_NAME: "latest"
-        BUILDX: "true"
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: ajcn06/personal-nginx-01
+        tag: latest
 
   k8s_deploy:
     name: K8s Deploy  
