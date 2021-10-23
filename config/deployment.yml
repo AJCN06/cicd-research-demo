@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: site
-          image: <IMAGE>
+          image: registry.digitalocean.com/ajcn/site:latest
           ports:
             - containerPort: 8080
 
